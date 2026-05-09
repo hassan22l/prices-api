@@ -11,7 +11,7 @@ export class GovernmentPricesClient {
     const shops =
       "15-1-145,15-1-5506,61-1-25,64-1-19,15-1-179,15-1-81,23-1-6204,12-1-197,15-1-116,9-2-61,12-1-155,12-1-184,12-1-162,15-1-149,15-1-89,9-3-662,15-1-92,15-1-66,15-1-5528,9-3-5214,15-1-125,15-1-1036,15-1-137,15-1-5123,15-1-5473,15-1-5567,24-1-287,12-1-154,15-1-194,15-1-1003";
     const response = await fetch(
-      `${this.baseUrl}/producto?id_producto=${productId}&array_sucursales=${shops}&limit=10`,
+      `${this.baseUrl}/producto?id_producto=${productId}&array_sucursales=${shops}&limit=6`,
       {
         headers: {
           "User-Agent":
@@ -29,8 +29,34 @@ export class GovernmentPricesClient {
       );
     }
 
-    const data = (await response.json()) as { price: number };
-    console.log(`Fetched price for product ${productId}: ${data.price}`);
-    return data;
+    
+    //const data = (await response.json()) as { price: number }
+//console.log(`Fetched price for product ${productId}: ${data.price}`);
+//return data;
+//   }
+// }
+const data: any = await response.json();
+    const product = {
+      barcode: data.producto.id,
+      name: data.producto.nombre,
+      prices: data.sucursales
+        .filter((s: any, index: number, self: any []) =>
+          index ===
+        self.findIndex(
+          (x:any)=> x.banderaDescripcion === s.banderaDescripcion
+        )
+        )
+        .slice(0, 6)
+        .map((s: any) => ({
+          shop: s.banderaDescripcion,
+          price:
+            s.preciosProducto?.precioLista ||
+            s.preciosProducto?.precio ||
+            s.preciosProducto?.precio_unitario_con_iva,
+        })),
+    };
+    console.log(product);
+
+    return product;
   }
 }

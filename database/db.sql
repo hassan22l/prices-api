@@ -1,5 +1,6 @@
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
+    barcode TEXT UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
@@ -8,7 +9,8 @@ CREATE TABLE products (
 
 CREATE TABLE shops (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL, type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE prices (
@@ -19,4 +21,4 @@ CREATE TABLE prices (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO shops (name) VALUES ('Shop A'), ('Shop B'), ('Shop C');
+ALTER TABLE prices ADD CONSTRAINT unique_price UNIQUE (product_id, shop_id, price);
