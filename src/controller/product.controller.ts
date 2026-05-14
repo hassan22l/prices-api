@@ -9,4 +9,33 @@ export class ProductController {
     const product = await this.productService.getProduct(id);
     return res.status(200).json(product);
   }
+
+  async getUserPrice(req: Request, res: Response){
+  try {
+    const result = await this.productService.getUserPrice(String (req.params.id));
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error getting my price',
+    });
+  }
 }
+
+async saveUserPrice(req: Request, res: Response){
+  try{
+    const result = await
+    this.productService.saveUserPrice(String(
+      req.params.id),
+      req.body.price
+    );
+    res.json(result);
+
+  } catch(error){
+    res.status(500).json({
+      error: 'error',
+    });
+  }
+}
+}
+
+

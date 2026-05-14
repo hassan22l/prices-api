@@ -38,13 +38,23 @@ export class GovernmentPricesClient {
 const data: any = await response.json();
     const product = {
       barcode: data.producto.id,
+      image: `https://imagenes.preciosclaros.gob.ar/productos/${productId}.jpg`,
       name: data.producto.nombre,
       prices: data.sucursales
-        .filter((s: any, index: number, self: any []) =>
-          index ===
-        self.findIndex(
-          (x:any)=> x.banderaDescripcion === s.banderaDescripcion
+        .filter(
+          (s:any) =>
+            (s.banderaDescripcion && 
+          s.preciosProducto?.precioLista ||
+          s.preciosProducto?.precio ||
+          s.preciosProducto?.precio_unitario_con_iva
+            )
         )
+        .filter(
+          (s: any, index: Number, self:any[]) =>
+            index === 
+          self.findIndex(
+            (x:any)=> x.banderaDescripcion ===s.banderaDescripcion 
+          )
         )
         .slice(0, 6)
         .map((s: any) => ({

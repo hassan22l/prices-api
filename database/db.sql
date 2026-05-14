@@ -3,6 +3,7 @@ CREATE TABLE products (
     barcode TEXT UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    image TEXT,
     price DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -19,6 +20,14 @@ CREATE TABLE prices (
     shop_id INTEGER REFERENCES shops(id),
     price NUMERIC (10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_prices(
+    id SERIAL PRIMARY KEY,
+    barcode VARCHAR(50) UNIQUE NOT NULL,
+    price NUMERIC (10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 ALTER TABLE prices ADD CONSTRAINT unique_price UNIQUE (product_id, shop_id, price);
