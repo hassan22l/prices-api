@@ -18,7 +18,7 @@ export class ProductService {
     [barcode]
   );
 
-  if (result.rows.lenght === 0 ){
+  if (result.rows.length === 0 ){
     return {
       price: null,
     };

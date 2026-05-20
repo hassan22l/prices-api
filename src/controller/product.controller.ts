@@ -31,8 +31,9 @@ async saveUserPrice(req: Request, res: Response){
     res.json(result);
 
   } catch(error){
+    console.error('Error saving user price:', error);
     res.status(500).json({
-      error: 'error',
+      error: error instanceof Error ? error.message : 'error',
     });
   }
 }
