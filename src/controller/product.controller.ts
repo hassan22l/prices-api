@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { ProductService } from '../service/product.service';
+import { Request, Response } from "express";
+import { ProductService } from "../service/product.service";
 
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -10,32 +10,37 @@ export class ProductController {
     return res.status(200).json(product);
   }
 
-  async getUserPrice(req: Request, res: Response){
+  async getUserPrice(req: Request, res: Response) {
+    try {
+      const result = await this.productService.getUserPrice(
+        String(req.params.id),
+      );
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: "Error getting my price",
+      });
+    }
+  }
+  async saveUserPrice(req: Request, res: Response) {
   try {
-    const result = await this.productService.getUserPrice(String (req.params.id));
+    console.log(req.body);
+
+    const barcode = req.params.id as string;
+    const price = Number(req.body.price);
+
+    const result = await this.productService.saveUserPrice(
+      barcode,
+      price
+    );
+
     res.json(result);
   } catch (error) {
-    res.status(500).json({
-      error: 'Error getting my price',
-    });
-  }
-}
+    console.error("ERROR REAL:", error);
 
-async saveUserPrice(req: Request, res: Response){
-  try{
-    const result = await
-    this.productService.saveUserPrice(String(
-      req.params.id),
-      req.body.price
-    );
-    res.json(result);
-
-  } catch(error){
     res.status(500).json({
-      error: 'error',
+      error: "error",
     });
   }
 }
 }
-
-

@@ -12,31 +12,30 @@ export class ProductService {
     return this.client.getPrice(id);
   }
 
-  async getUserPrice(barcode:string){
+  async getUserPrice(id:string){
   const result = await db.query(
-    "SELECT price FROM user_prices WHERE barcode = $1",
-    [barcode]
+    "SELECT price FROM user_prices WHERE id = $1",
+    [id]
   );
 
-  if (result.rows.lenght === 0 ){
+  if (result.rows.length === 0 ){
     return {
       price: null,
     };
   }
   return result.rows[0];
 }
-
-async saveUserPrice(barcode: string, price: number){
+  async saveUserPrice(id: string, price: number){
   await db.query(
   `
-  INSERT INTO user_prices (barcode,price)
+  INSERT INTO users_prices (id,price)
   VALUES ($1, $2)
-  ON CONFLICT (barcode)
+  ON CONFLICT (id)
   DO UPDATE SET 
   price= EXCLUDED.price,
   updated_at =NOW ()
   `,
-  [barcode, price]
+  [id, price]
   );
   return{
     success: true,
@@ -45,4 +44,6 @@ async saveUserPrice(barcode: string, price: number){
 }
 
 }
+
+
 
