@@ -59,6 +59,7 @@ const data: any = await response.json();
         .slice(0, 6)
         .map((s: any) => ({
           shop: s.banderaDescripcion,
+          logo: `https://imagenes.preciosclaros.gob.ar/comercios/${s.comercioId}-1.jpg`,
           price:
             s.preciosProducto?.precioLista ||
             s.preciosProducto?.precio ||

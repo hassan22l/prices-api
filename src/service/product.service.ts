@@ -14,7 +14,7 @@ export class ProductService {
 
   async getUserPrice(id:string){
   const result = await db.query(
-    "SELECT price FROM user_prices WHERE id = $1",
+    "SELECT price FROM users_prices WHERE id = $1",
     [id]
   );
 
@@ -39,6 +39,7 @@ export class ProductService {
   );
   return{
     success: true,
+    price: price,
   };
 
 }
