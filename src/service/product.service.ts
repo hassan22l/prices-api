@@ -9,12 +9,33 @@ export class ProductService {
   }
 
   async getProduct(id: string): Promise<any> {
-    return this.client.getPrice(id);
+    const product = await this.client.getPrice(id);
+    const userPriceResult = await db.query(
+      "SELECT price FROM user_prices WHERE barcode = $1",
+      [id]
+    );
+
+    const userPrice = userPriceResult.rows[0]?.price ?? null;
+    const response = userPrice !== null
+      ? {
+          ...product,
+          userPrice,
+        }
+      : product;
+
+    console.log("[SCAN PRODUCT DEBUG]", {
+      id,
+      product,
+      userPrice,
+      response,
+    });
+
+    return response;
   }
 
   async getUserPrice(id:string){
   const result = await db.query(
-    "SELECT price FROM users_prices WHERE id = $1",
+    "SELECT price FROM user_prices WHERE barcode = $1",
     [id]
   );
 
@@ -28,12 +49,12 @@ export class ProductService {
   async saveUserPrice(id: string, price: number){
   await db.query(
   `
-  INSERT INTO users_prices (id,price)
+  INSERT INTO user_prices (barcode, price)
   VALUES ($1, $2)
-  ON CONFLICT (id)
+  ON CONFLICT (barcode)
   DO UPDATE SET 
-  price= EXCLUDED.price,
-  updated_at =NOW ()
+  price = EXCLUDED.price,
+  updated_at = NOW()
   `,
   [id, price]
   );

@@ -22,8 +22,8 @@ CREATE TABLE prices (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE users_prices(
-    id VARCHAR(50) PRIMARY KEY,
+CREATE TABLE user_prices(
+    barcode VARCHAR(50) PRIMARY KEY,
     price NUMERIC (10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()

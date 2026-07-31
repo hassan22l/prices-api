@@ -24,22 +24,34 @@ export class ProductController {
   }
   async saveUserPrice(req: Request, res: Response) {
   try {
-    console.log(req.body);
+    console.log("Body recibido:", req.body);
 
     const barcode = req.params.id as string;
     const price = Number(req.body.price);
+
+    console.log("Barcode:", barcode, "Precio:", price, "Es número válido:", !isNaN(price));
+
+    if (!barcode || isNaN(price)) {
+      return res.status(400).json({
+        error: "Barcode o precio inválido",
+        barcode,
+        price,
+      });
+    }
 
     const result = await this.productService.saveUserPrice(
       barcode,
       price
     );
 
+    console.log("Resultado guardado:", result);
     res.json(result);
   } catch (error) {
     console.error("ERROR REAL:", error);
 
     res.status(500).json({
-      error: "error",
+      error: "Error guardando precio",
+      details: error instanceof Error ? error.message : "Error desconocido",
     });
   }
 }

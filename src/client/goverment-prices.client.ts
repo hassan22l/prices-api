@@ -29,32 +29,23 @@ export class GovernmentPricesClient {
       );
     }
 
-    
-    //const data = (await response.json()) as { price: number }
-//console.log(`Fetched price for product ${productId}: ${data.price}`);
-//return data;
-//   }
-// }
-const data: any = await response.json();
+    const data: any = await response.json();
     const product = {
       barcode: data.producto.id,
       image: `https://imagenes.preciosclaros.gob.ar/productos/${productId}.jpg`,
       name: data.producto.nombre,
       prices: data.sucursales
+        .filter((s: any) => {
+          return (
+            s.banderaDescripcion &&
+            (s.preciosProducto?.precioLista ||
+              s.preciosProducto?.precio ||
+              s.preciosProducto?.precio_unitario_con_iva)
+          );
+        })
         .filter(
-          (s:any) =>
-            (s.banderaDescripcion && 
-          s.preciosProducto?.precioLista ||
-          s.preciosProducto?.precio ||
-          s.preciosProducto?.precio_unitario_con_iva
-            )
-        )
-        .filter(
-          (s: any, index: Number, self:any[]) =>
-            index === 
-          self.findIndex(
-            (x:any)=> x.banderaDescripcion ===s.banderaDescripcion 
-          )
+          (s: any, index: number, self: any[]) =>
+            index === self.findIndex((x: any) => x.banderaDescripcion === s.banderaDescripcion),
         )
         .slice(0, 6)
         .map((s: any) => ({
