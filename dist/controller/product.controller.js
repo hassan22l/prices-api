@@ -6,9 +6,19 @@ class ProductController {
         this.productService = productService;
     }
     async getProduct(req, res) {
-        const { id } = req.params;
-        const product = await this.productService.getProduct(id);
-        return res.status(200).json(product);
+        try {
+            const { id } = req.params;
+            const product = await this.productService.getProduct(id);
+            return res.status(200).json(product);
+        }
+        catch (error) {
+            const message = error instanceof Error ? error.message : "Unknown error";
+            console.error("Error getting product:", error);
+            return res.status(502).json({
+                error: "Error fetching product data",
+                details: message,
+            });
+        }
     }
     async getUserPrice(req, res) {
         try {
